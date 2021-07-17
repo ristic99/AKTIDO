@@ -1,0 +1,47 @@
+﻿<Window x:Name="windowPretrazi" x:Class="Aktido.Pretrazi"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Aktido"
+        mc:Ignorable="d"
+        Title="Pretrazi" Height="500" Width="925" Background="#FF050066" ContentRendered="windowPretrazi_ContentRendered" ResizeMode="NoResize" Icon="Content/Aktido.ico">
+    <Grid Margin="0,0,-2,-2">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Label x:Name="label" Content="PRETRAGA" HorizontalAlignment="Left" Margin="236,15,0,0" VerticalAlignment="Top" Foreground="White" FontSize="24" Width="650" HorizontalContentAlignment="Center" Height="42"/>
+        <Button x:Name="btn_Export" Content="Export" HorizontalAlignment="Left" Margin="701,395,0,0" VerticalAlignment="Top" Width="85" Height="25" Click="btn_Export_Click"/>
+        <DataGrid x:Name="dataGrid" HorizontalAlignment="Left" Margin="236,76,0,0" VerticalAlignment="Top" Height="297" Width="650" Background="{x:Null}" BorderBrush="White" IsReadOnly="True" MouseDoubleClick="dataGrid_MouseDoubleClick"/>
+        <Button x:Name="btn_CleanDatagrid" Content="Izbriši" HorizontalAlignment="Left" Margin="236,395,0,0" VerticalAlignment="Top" Width="85" Height="25" Click="btn_CleanDatagrid_Click"/>
+        <Button x:Name="btn_Vise" Content="Više" HorizontalAlignment="Left" Margin="801,395,0,0" VerticalAlignment="Top" Width="85" Height="25" Click="btn_Vise_Click"/>
+        <Grid HorizontalAlignment="Left" Height="468" VerticalAlignment="Top" Width="207" Background="#33000000">
+            <Button x:Name="btn_Search" Content="Pretraži" HorizontalAlignment="Left" Margin="55,396,0,0" VerticalAlignment="Top" Width="100" Height="28" Click="btn_Search_Click"/>
+            <ComboBox x:Name="comboBox_Podkategorija" HorizontalAlignment="Left" Margin="42,187,0,0" VerticalAlignment="Top" Width="130" RenderTransformOrigin="-0.267,1.5" Height="23" SelectedIndex="0">
+                <ComboBoxItem Content="Sve"/>
+                <ComboBoxItem Content="Stanovi"/>
+                <ComboBoxItem Content="Kuće"/>
+                <ComboBoxItem Content="Poslovni prostori"/>
+                <ComboBoxItem Content="Zemljišta"/>
+                <ComboBoxItem Content="Garaže"/>
+                <ComboBoxItem Content="Vikendice"/>
+            </ComboBox>
+            <ComboBox x:Name="comboBox_Vrsta" HorizontalAlignment="Left" Margin="42,219,0,0" VerticalAlignment="Top" Width="130" Height="23" VerticalContentAlignment="Center" SelectedIndex="0">
+                <ComboBoxItem Content="Sve"/>
+                <ComboBoxItem Content="Prodaja"/>
+                <ComboBoxItem Content="Potražnja"/>
+                <ComboBoxItem Content="Izdavanje"/>
+            </ComboBox>
+            <ComboBox x:Name="cBoxKanton" HorizontalAlignment="Left" Margin="42,302,0,0" VerticalAlignment="Top" Width="130" Height="23" VerticalContentAlignment="Center" SelectedIndex="0" SelectionChanged="cBoxKanton_SelectionChanged"/>
+            <ComboBox x:Name="cBoxLokacija" HorizontalAlignment="Left" Margin="42,334,0,0" VerticalAlignment="Top" Width="130" Height="23" VerticalContentAlignment="Center" SelectedIndex="0" Visibility="Hidden"/>
+            <TextBox x:Name="txtCijenaOd" HorizontalAlignment="Left" Height="24" Margin="72,64,0,0" VerticalAlignment="Top" Width="76" PreviewTextInput="NumberValidationTextBox" TextWrapping="NoWrap" AcceptsReturn="False" MaxLength="8" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+            <TextBox x:Name="txtCijenaDo" HorizontalAlignment="Left" Height="24" Margin="72,95,0,0" VerticalAlignment="Top" Width="76" PreviewTextInput="NumberValidationTextBox" TextWrapping="NoWrap" AcceptsReturn="False" MaxLength="8" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+            <Label x:Name="label1_Copy" Content="CIJENA" HorizontalAlignment="Left" Margin="72,31,0,0" VerticalAlignment="Top" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="76"/>
+            <Label x:Name="label1_Copy2" Content="OD:" HorizontalAlignment="Left" Margin="42,62,0,0" VerticalAlignment="Top" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+            <Label x:Name="label1_Copy3" Content="DO:" HorizontalAlignment="Left" Margin="42,93,0,0" VerticalAlignment="Top" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+            <Label x:Name="label1_Copy4" Content="PODKATEGORIJA" HorizontalAlignment="Left" Margin="42,154,0,0" VerticalAlignment="Top" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="130"/>
+            <Label x:Name="label1_Copy1" Content="LOKACIJA" HorizontalAlignment="Left" Margin="42,269,0,0" VerticalAlignment="Top" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="130"/>
+        </Grid>
+        <Label x:Name="txt_Rez" Content="Broj rezultata:" HorizontalAlignment="Left" Margin="236,24,0,0" VerticalAlignment="Top" Foreground="White" FontSize="18.667" Height="35" Width="200"/>
+    </Grid>
+</Window>

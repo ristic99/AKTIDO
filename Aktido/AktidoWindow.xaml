@@ -1,0 +1,52 @@
+﻿<Window x:Name="window" x:Class="Aktido.AktidoWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Aktido"
+        mc:Ignorable="d"
+        Title="Aktido" Height="500" Width="905" Background="#FF050066" ContentRendered="window_ContentRendered" ResizeMode="NoResize" Icon="Content/Aktido.ico">
+
+    <Window.ContextMenu>
+        <ContextMenu>
+            <MenuItem
+                  Click="menuClick"
+                  Header="Opcije">
+            </MenuItem>
+        </ContextMenu>
+    </Window.ContextMenu>
+
+    <Grid Margin="0,1,-8,0" Width="{Binding ActualWidth, ElementName=window, Mode=OneWay}">
+        <Grid HorizontalAlignment="Left" Height="468" VerticalAlignment="Top" Width="200" Background="#33000000">
+            <Label x:Name="lbl_BrojArtikala" Content="Ukupno null oglasa" HorizontalAlignment="Left" Margin="27,73,0,0" VerticalAlignment="Top" Width="127" Foreground="White"/>
+            <Label x:Name="lbl_Stanovi" Content="Stanovi: " HorizontalAlignment="Left" Margin="27,116,0,0" VerticalAlignment="Top" Foreground="White"/>
+            <Label x:Name="lbl_Kuce" Content="Kuće:" HorizontalAlignment="Left" Margin="27,142,0,0" VerticalAlignment="Top" Foreground="White"/>
+            <Label x:Name="lbl_Prostori" Content="Poslovni prostori:" HorizontalAlignment="Left" Margin="27,168,0,0" VerticalAlignment="Top" Foreground="White"/>
+            <Label x:Name="lbl_Zemljista" Content="Zemljišta: " HorizontalAlignment="Left" Margin="27,194,0,0" VerticalAlignment="Top" Foreground="White"/>
+            <Label x:Name="lbl_Garaze" Content="Garaže" HorizontalAlignment="Left" Margin="27,220,0,0" VerticalAlignment="Top" Foreground="White"/>
+            <Label x:Name="lbl_Vikendice" Content="Vikendice:" HorizontalAlignment="Left" Margin="27,246,0,0" VerticalAlignment="Top" Foreground="White"/>
+            <Label x:Name="label" Content="Statistika" HorizontalAlignment="Left" Margin="27,15,0,0" VerticalAlignment="Top" Foreground="White" FontSize="21.333"/>
+            <Button x:Name="btn_Search" Content="Pretraži OLX.ba!" HorizontalAlignment="Left" Margin="33,387,0,0" VerticalAlignment="Top" Width="130" Click="btn_Search_Click" Height="30" IsEnabled="False"/>
+            <ComboBox x:Name="comboBox" HorizontalAlignment="Left" Margin="33,346,0,0" VerticalAlignment="Top" Width="130" RenderTransformOrigin="-0.267,1.5" SelectedIndex="0">
+                <ComboBoxItem Content="Sve"/>
+                <ComboBoxItem Content="Stanovi"/>
+                <ComboBoxItem Content="Kuće"/>
+                <ComboBoxItem Content="Poslovni prostori"/>
+                <ComboBoxItem Content="Zemljišta"/>
+                <ComboBoxItem Content="Garaže"/>
+                <ComboBoxItem Content="Vikendice"/>
+            </ComboBox>
+            <Label x:Name="lbl_Pretrazi" Content="Pretraži:" HorizontalAlignment="Left" Margin="27,313,0,0" VerticalAlignment="Top" Foreground="White"/>
+        </Grid>
+        <ProgressBar x:Name="progressBar" HorizontalAlignment="Left" Height="10" Margin="495,431,0,0" VerticalAlignment="Top" Width="375"/>
+        <Label x:Name="lbl_Done" Content="Izvršeno: " HorizontalAlignment="Left" Margin="214,422,0,0" VerticalAlignment="Top" Foreground="White" RenderTransformOrigin="0.489,0.103"/>
+        <Label x:Name="txt_Novi" Content="Novih artikala:" HorizontalAlignment="Left" Margin="220,18,0,0" VerticalAlignment="Top" Foreground="White" FontSize="18.667"/>
+        <DataGrid x:Name="dataGrid" HorizontalAlignment="Left" Margin="220,68,0,0" VerticalAlignment="Top" Height="293" Width="650" Background="{x:Null}" BorderBrush="White" Foreground="Black" IsReadOnly="True" MouseDoubleClick="dataGrid_MouseDoubleClick"/>
+        <Button x:Name="btn_Vise" Content="Više..." HorizontalAlignment="Left" Margin="583,375,0,0" VerticalAlignment="Top" Width="85" Height="25" Click="btn_Vise_Click"/>
+        <Button x:Name="btn_Export" Content="Export" HorizontalAlignment="Left" Margin="493,375,0,0" VerticalAlignment="Top" Width="85" Height="25" Click="btn_Export_Click"/>
+        <Button x:Name="btn_Pretrazi" Content="Pretraži BP" HorizontalAlignment="Left" Margin="220,375,0,0" VerticalAlignment="Top" Width="85" Height="25" Click="btn_Pretrazi_Click" IsEnabled="False"/>
+        <Button x:Name="btn_Stop" Content="Zaustavi" HorizontalAlignment="Left" Margin="785,375,0,0" VerticalAlignment="Top" Width="85" Height="25" Click="btn_Stop_Click" IsEnabled="False"/>
+        <Button x:Name="btn_CleanDatagrid" Content="Izbriši" HorizontalAlignment="Left" Margin="310,375,0,0" VerticalAlignment="Top" Width="85" Height="25" Click="btn_CleanDatagrid_Click"/>
+
+    </Grid>
+</Window>
