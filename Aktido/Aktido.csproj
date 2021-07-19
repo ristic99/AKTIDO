@@ -103,7 +103,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Search.cs" />
+    <Compile Include="Classes\Search.cs" />
     <Page Include="ArtikalWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -112,7 +112,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="AktidoCore.cs" />
+    <Compile Include="Classes\AktidoCore.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -120,28 +120,28 @@
     <Compile Include="ArtikalWindow.xaml.cs">
       <DependentUpon>ArtikalWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Constants.cs" />
-    <Compile Include="Database.cs" />
-    <Compile Include="Nekretnina.cs" />
+    <Compile Include="Classes\Constants.cs" />
+    <Compile Include="Classes\Database.cs" />
+    <Compile Include="Classes\Nekretnina.cs" />
     <Compile Include="AktidoWindow.xaml.cs">
       <DependentUpon>AktidoWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Options.xaml">
+    <Page Include="OptionsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pretrazi.xaml">
+    <Page Include="PretraziWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Options.xaml.cs">
-      <DependentUpon>Options.xaml</DependentUpon>
+    <Compile Include="OptionsWindow.xaml.cs">
+      <DependentUpon>OptionsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pretrazi.xaml.cs">
-      <DependentUpon>Pretrazi.xaml</DependentUpon>
+    <Compile Include="PretraziWindow.xaml.cs">
+      <DependentUpon>PretraziWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -160,7 +160,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -186,6 +185,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

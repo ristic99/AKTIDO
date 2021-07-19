@@ -39,7 +39,7 @@ namespace Aktido
 
         public void menuClick(object sender, RoutedEventArgs e)
         {
-            Options form = new Options();
+            OptionsWindow form = new OptionsWindow();
             form.Show();
         }
 
@@ -102,7 +102,7 @@ namespace Aktido
 
         private void btn_Pretrazi_Click(object sender, RoutedEventArgs e)
         {
-            Pretrazi form = new Pretrazi();
+            PretraziWindow form = new PretraziWindow();
             form.Show();
         }
 

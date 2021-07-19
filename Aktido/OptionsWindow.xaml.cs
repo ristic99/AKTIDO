@@ -16,12 +16,9 @@ using System.Windows.Shapes;
 
 namespace Aktido
 {
-    /// <summary>
-    /// Interaction logic for Options.xaml
-    /// </summary>
-    public partial class Options : Window
+    public partial class OptionsWindow : Window
     {   
-        public Options()
+        public OptionsWindow()
         {
             InitializeComponent();
 

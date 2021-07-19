@@ -16,9 +16,9 @@ using System.Windows.Shapes;
 
 namespace Aktido
 {
-    public partial class Pretrazi : Window
+    public partial class PretraziWindow : Window
     {    
-        public Pretrazi()
+        public PretraziWindow()
         {
             InitializeComponent();
 
