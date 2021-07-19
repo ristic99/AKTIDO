@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Aktido"
         mc:Ignorable="d"
-        Title="Artikal" Height="425" Width="700" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Background="#FF050066" Icon="Content/Aktido.ico">
+        Title="Artikal" Height="425" Width="700" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Background="#FF050066" Icon="../Content/Aktido.ico">
     <Grid Margin="1,0,-1,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="31*"/>

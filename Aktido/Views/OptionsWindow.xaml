@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Aktido"
         mc:Ignorable="d"
-        Title="Options" Height="310" Width="300" Background="#FF050066">
+        Title="Options" Height="310" Width="300" Background="#FF050066" Icon="../Content/Aktido.ico">
     <Grid>
         <Button x:Name="btnSave" Content="Snimi" HorizontalAlignment="Left" Margin="85,230,0,0" VerticalAlignment="Top" Width="120" Height="30" Click="btnSave_Click"/>
         <TextBox x:Name="txtIP" HorizontalAlignment="Left" Height="23" Margin="61,33,0,0" TextWrapping="Wrap" Text="127.0.0.1" VerticalAlignment="Top" Width="170"/>

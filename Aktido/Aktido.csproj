@@ -104,11 +104,11 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Classes\Search.cs" />
-    <Page Include="ArtikalWindow.xaml">
+    <Page Include="Views\ArtikalWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="AktidoWindow.xaml">
+    <Page Include="Views\AktidoWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -117,30 +117,30 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ArtikalWindow.xaml.cs">
+    <Compile Include="Views\ArtikalWindow.xaml.cs">
       <DependentUpon>ArtikalWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Classes\Constants.cs" />
     <Compile Include="Classes\Database.cs" />
     <Compile Include="Classes\Nekretnina.cs" />
-    <Compile Include="AktidoWindow.xaml.cs">
+    <Compile Include="Views\AktidoWindow.xaml.cs">
       <DependentUpon>AktidoWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="OptionsWindow.xaml">
+    <Page Include="Views\OptionsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="PretraziWindow.xaml">
+    <Page Include="Views\PretraziWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="OptionsWindow.xaml.cs">
+    <Compile Include="Views\OptionsWindow.xaml.cs">
       <DependentUpon>OptionsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PretraziWindow.xaml.cs">
+    <Compile Include="Views\PretraziWindow.xaml.cs">
       <DependentUpon>PretraziWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">

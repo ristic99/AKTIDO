@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Aktido"
         mc:Ignorable="d"
-        Title="Pretrazi" Height="500" Width="925" Background="#FF050066" ContentRendered="windowPretrazi_ContentRendered" ResizeMode="NoResize" Icon="Content/Aktido.ico">
+        Title="Pretrazi" Height="500" Width="925" Background="#FF050066" ContentRendered="windowPretrazi_ContentRendered" ResizeMode="NoResize" Icon="../Content/Aktido.ico">
     <Grid Margin="0,0,-2,-2">
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
