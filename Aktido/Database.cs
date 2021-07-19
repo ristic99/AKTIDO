@@ -108,7 +108,6 @@ namespace Aktido
                         {
                             nekretnina.artikal = new Artikal();
                             nekretnina.artikal.korisnik = new Korisnik();
-
                             nekretnina.artikal.id = reader.GetInt32("id");
                             nekretnina.artikal.naslov = reader.GetString("naslov");
                             nekretnina.artikal.cijena = AktidoCore.CijenaToString(reader.GetInt32("cijena"));
@@ -202,7 +201,6 @@ namespace Aktido
             {
                 using (MySqlConnection connection = new MySqlConnection(database.ToString()))
                 {
-
                     using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
                         connection.Open();
@@ -226,7 +224,6 @@ namespace Aktido
             {
                 using (MySqlConnection connection = new MySqlConnection(database.ToString()))
                 {
-
                     using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
                         await connection.OpenAsync();

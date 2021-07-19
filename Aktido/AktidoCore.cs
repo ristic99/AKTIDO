@@ -50,6 +50,19 @@ namespace Aktido
         }
     }
 
+    class Kind
+    {
+        public int id { get; set; }
+        public string name { get; set; }
+    }
+
+    class Estate
+    {
+        public int id { get; set; }
+        public string name { get; set; }
+        public int count { get; set; }
+    }
+
     public class BrojRezultata
     {
         public string brojrezultata { get; set; }
