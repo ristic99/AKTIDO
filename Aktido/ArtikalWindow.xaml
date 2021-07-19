@@ -15,7 +15,7 @@
         <TextBlock x:Name="txtKorisnik" HorizontalAlignment="Left" Margin="306,39,0,0" TextWrapping="Wrap" Text="Korisnik: " VerticalAlignment="Top" FontSize="16" Foreground="White" Grid.Row="1"/>
         <TextBlock x:Name="txtObjavljeno" HorizontalAlignment="Left" Margin="306,65,0,0" TextWrapping="Wrap" Text="Objavljeno:" VerticalAlignment="Top" FontSize="16" Foreground="White" Grid.Row="1"/>
         <TextBlock x:Name="txtGrad" HorizontalAlignment="Left" Margin="306,91,0,0" TextWrapping="Wrap" Text="Grad:" VerticalAlignment="Top" FontSize="16" Foreground="White" Grid.Row="1"/>
-        <TextBlock x:Name="txtCijena" HorizontalAlignment="Left" Margin="306,117,0,0" TextWrapping="Wrap" Text="Plaćanje:" VerticalAlignment="Top" FontSize="16" Foreground="White" Grid.Row="1"/>
+        <TextBlock x:Name="txtCijena" HorizontalAlignment="Left" Margin="306,117,0,0" TextWrapping="Wrap" Text="Cijena:" VerticalAlignment="Top" FontSize="16" Foreground="White" Grid.Row="1"/>
         <TextBox x:Name="textBox" TextWrapping="Wrap" Margin="304,180,0,0" Grid.Row="1" FontSize="14" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Auto" Height="149" HorizontalAlignment="Left" VerticalAlignment="Top" Width="245" IsReadOnly="True"/>
         <TextBlock x:Name="textBlock_Copy3" HorizontalAlignment="Left" Margin="304,154,0,0" TextWrapping="Wrap" Text="Detaljan opis" VerticalAlignment="Top" FontSize="16" Foreground="White" Grid.Row="1"/>
         <Button x:Name="btnLink" Content="Link" HorizontalAlignment="Left" Margin="574,260,0,0" VerticalAlignment="Top" Width="85" Height="25" Background="White" Grid.Row="1" Click="btnLink_Click"/>

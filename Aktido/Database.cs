@@ -1,11 +1,11 @@
-﻿using MySql.Data.MySqlClient;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MySqlConnector;
 
 namespace Aktido
 {
@@ -59,48 +59,51 @@ namespace Aktido
 
         public static void DBAddNekretnina(Nekretnina nekretnina)
         {
+            string query = "INSERT INTO `nekretnine` (`id`, `naslov`, `cijena`, `osobine`, `korisnik`, `timestamp`, `kanton`, `grad`, `kratki_opis`, `detaljni_opis`, `latitude`, `longitude`, `zavrsen`, `vrsta_prodaje`, `podkategorija`) VALUES (@id, @naslov, @cijena, @osobine, @korisnik, @timestamp, @kanton, @grad, @kratki_opis, @detaljni_opis, @latitude, @longitude, @zavrsen, @vrsta_prodaje, @podkategorija)";
             try
             {
-                MySqlConnection conn = new MySqlConnection(database.ToString());
-                MySqlCommand command = new MySqlCommand();
-                string SQL = "INSERT INTO `nekretnine` (`id`, `naslov`, `cijena`, `osobine`, `korisnik`, `timestamp`, `kanton`, `grad`, `kratki_opis`, `detaljni_opis`, `latitude`, `longitude`, `zavrsen`, `vrsta_prodaje`, `podkategorija`) VALUES (@id, @naslov, @cijena, @osobine, @korisnik, @timestamp, @kanton, @grad, @kratki_opis, @detaljni_opis, @latitude, @longitude, @zavrsen, @vrsta_prodaje, @podkategorija)";
-                command.CommandText = SQL;
-                command.Parameters.AddWithValue("@id", nekretnina.artikal.id);
-                command.Parameters.AddWithValue("@naslov", nekretnina.artikal.naslov);
-                command.Parameters.AddWithValue("@cijena", AktidoCore.CijenaToInt(nekretnina.artikal.cijena));       
-                command.Parameters.AddWithValue("@osobine", JsonConvert.SerializeObject(nekretnina.artikal.osobine));
-                command.Parameters.AddWithValue("@korisnik", nekretnina.artikal.korisnik.ime);
-                command.Parameters.AddWithValue("@timestamp", nekretnina.artikal.timestamp);
-                command.Parameters.AddWithValue("@kanton", nekretnina.artikal.kanton);
-                command.Parameters.AddWithValue("@grad", nekretnina.artikal.grad);
-                command.Parameters.AddWithValue("@kratki_opis", nekretnina.artikal.kratki_opis);
-                command.Parameters.AddWithValue("@detaljni_opis", nekretnina.artikal.detaljni_opis);
-                command.Parameters.AddWithValue("@latitude", nekretnina.artikal.latitude);
-                command.Parameters.AddWithValue("@longitude", nekretnina.artikal.longitude);
-                command.Parameters.AddWithValue("@zavrsen", nekretnina.artikal.zavrsen);
-                command.Parameters.AddWithValue("@vrsta_prodaje", nekretnina.artikal.vrsta_prodaje);
-                command.Parameters.AddWithValue("@podkategorija", nekretnina.artikal.putanja[1].id);
-                command.Connection = conn;
-                conn.Open();
-                command.ExecuteNonQuery();
-                conn.Close();
+                using (MySqlConnection connection = new MySqlConnection(database.ToString()))
+                {
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    {
+                        command.CommandText = query;
+                        command.Parameters.AddWithValue("@id", nekretnina.artikal.id);
+                        command.Parameters.AddWithValue("@naslov", nekretnina.artikal.naslov);
+                        command.Parameters.AddWithValue("@cijena", AktidoCore.CijenaToInt(nekretnina.artikal.cijena));
+                        command.Parameters.AddWithValue("@osobine", JsonConvert.SerializeObject(nekretnina.artikal.osobine));
+                        command.Parameters.AddWithValue("@korisnik", nekretnina.artikal.korisnik.ime);
+                        command.Parameters.AddWithValue("@timestamp", nekretnina.artikal.timestamp);
+                        command.Parameters.AddWithValue("@kanton", nekretnina.artikal.kanton);
+                        command.Parameters.AddWithValue("@grad", nekretnina.artikal.grad);
+                        command.Parameters.AddWithValue("@kratki_opis", nekretnina.artikal.kratki_opis);
+                        command.Parameters.AddWithValue("@detaljni_opis", nekretnina.artikal.detaljni_opis);
+                        command.Parameters.AddWithValue("@latitude", nekretnina.artikal.latitude);
+                        command.Parameters.AddWithValue("@longitude", nekretnina.artikal.longitude);
+                        command.Parameters.AddWithValue("@zavrsen", nekretnina.artikal.zavrsen);
+                        command.Parameters.AddWithValue("@vrsta_prodaje", nekretnina.artikal.vrsta_prodaje);
+                        command.Parameters.AddWithValue("@podkategorija", nekretnina.artikal.putanja[1].id);
+                        command.Connection = connection;
+                        connection.Open();
+                        command.ExecuteNonQuery();
+                    }
+                }
             }
-            catch (Exception ex) {  }
+            catch (Exception) { }
         }
 
         public static string DBLoadNekretnina(int id)
         {
             Nekretnina nekretnina = new Nekretnina();
-            string sql = "SELECT * FROM nekretnine WHERE id = @id";
-            using (MySqlConnection cn = new MySqlConnection(database.ToString()))
+            string query = "SELECT * FROM nekretnine WHERE id = @id";
+            try
             {
-                try
+                using (MySqlConnection connection = new MySqlConnection(database.ToString()))
                 {
-                    using (MySqlCommand cmd = new MySqlCommand(sql, cn))
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
-                        cmd.Parameters.AddWithValue("@id", id);
-                        cn.Open();
-                        MySqlDataReader reader = cmd.ExecuteReader();                    
+                        command.Parameters.AddWithValue("@id", id);
+                        connection.Open();
+                        MySqlDataReader reader = command.ExecuteReader();
                         while (reader.Read())
                         {
                             nekretnina.artikal = new Artikal();
@@ -115,152 +118,150 @@ namespace Aktido
                             nekretnina.artikal.grad = reader.GetString("grad");
                             nekretnina.artikal.kratki_opis = reader.GetString("kratki_opis");
                             nekretnina.artikal.detaljni_opis = reader.GetString("detaljni_opis");
-                            nekretnina.artikal.latitude =reader.GetDouble("latitude");
+                            nekretnina.artikal.latitude = reader.GetDouble("latitude");
                             nekretnina.artikal.longitude = reader.GetDouble("longitude");
-                            nekretnina.artikal.zavrsen = reader.GetBoolean("latitude");
+                            nekretnina.artikal.zavrsen = reader.GetBoolean("zavrsen");
                             nekretnina.artikal.vrsta_prodaje = reader.GetInt16("vrsta_prodaje");
                         }
-                        cn.Close();
 
                         string output = JsonConvert.SerializeObject(nekretnina);
                         return output;
                     }
                 }
-                catch (Exception ex) { return ""; }
+            }
+            catch (Exception)
+            {
+                return "";
             }
         }
 
         public static async Task<HashSet<int>> DBLoadCache()
         {
             HashSet<int> cache = new HashSet<int>();
-            string sql = "SELECT id FROM nekretnine";
-            using (MySqlConnection cn = new MySqlConnection(database.ToString()))
+            string query = "SELECT id FROM nekretnine";
+            try
             {
-                try
+                using (MySqlConnection connection = new MySqlConnection(database.ToString()))
                 {
-                    using (MySqlCommand cmd = new MySqlCommand(sql, cn))
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
-                        cn.Open();
-                        var reader = await cmd.ExecuteReaderAsync();
-                        while (reader.Read())
-                            cache.Add(reader.GetInt32(0));       
-                        cn.Close();
+                        await connection.OpenAsync();
+                        var reader = await command.ExecuteReaderAsync();
+                        while (await reader.ReadAsync())
+                            cache.Add(reader.GetInt32(0));
                         return cache;
                     }
                 }
-                catch (Exception ex) { return cache; }
+
+            }
+            catch (Exception)
+            {
+                return cache;
             }
         }
 
-        public static async Task<List<Nekretnina>> DBSearchNekretnina(String query, int _from, int _to) // OK!
+        public static async Task<List<Nekretnina>> DBSearchNekretnina(String s_query, int _from, int _to)
         {
             List<Nekretnina> nekretnine = new List<Nekretnina>();
-            string sql = "SELECT `naslov`,`cijena`,`podkategorija`,`korisnik`,`id`,`timestamp` FROM `nekretnine` WHERE id > 0" + query + " ORDER BY `id` ASC LIMIT " + _from  + "," +_to;
-            using (MySqlConnection cn = new MySqlConnection(database.ToString()))
+            string query = "SELECT `naslov`,`cijena`,`podkategorija`,`korisnik`,`id`,`timestamp` FROM `nekretnine` WHERE id > 0" + s_query + " ORDER BY `id` ASC LIMIT " + _from + "," + _to;
+            try
             {
-                try
+                using (MySqlConnection connection = new MySqlConnection(database.ToString()))
                 {
-                    using (MySqlCommand cmd = new MySqlCommand(sql, cn))
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
-                        cn.Open();
-                        var reader = await cmd.ExecuteReaderAsync();
-                        while (reader.Read())
+                        await connection.OpenAsync();
+                        var reader = await command.ExecuteReaderAsync();
+                        while (await reader.ReadAsync())
                         {
                             Nekretnina nekretnina = new Nekretnina();
                             nekretnina.artikal = new Artikal();
                             nekretnina.artikal.naslov = reader.GetString(0);
                             nekretnina.artikal.cijena = AktidoCore.CijenaToString(reader.GetInt32(1));
-                            nekretnina.artikal.podkategorija = reader.GetString(2);
+                            nekretnina.artikal.podkategorija = reader.GetInt32(2).ToString();
                             nekretnina.artikal.ime_korisnika = reader.GetString(3);
                             nekretnina.artikal.id = reader.GetInt32(4);
                             nekretnina.artikal.timestamp = reader.GetInt32(5);
                             nekretnine.Add(nekretnina);
                         }
-                        cn.Close();
                         return nekretnine;
                     }
                 }
-                catch (Exception ex) { return nekretnine; }
+
+            }
+            catch (Exception)
+            {
+                return nekretnine;
             }
         }
 
-        public static int DBSearchCount(String query)
+        public static int DBSearchCount(String s_query)
         {
-            string sql = "SELECT COUNT(*) FROM `nekretnine` WHERE id > 1" + query;
-            using (MySqlConnection cn = new MySqlConnection(database.ToString()))
+            string query = "SELECT COUNT(*) FROM `nekretnine` WHERE id > 1" + s_query;
+            try
             {
-                try
+                using (MySqlConnection connection = new MySqlConnection(database.ToString()))
                 {
-                    using (MySqlCommand cmd = new MySqlCommand(sql, cn))
+
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
-                        cn.Open();
-                        var result = Convert.ToInt32(cmd.ExecuteScalar());
-                        cn.Close();
+                        connection.Open();
+                        var result = Convert.ToInt32(command.ExecuteScalar());
                         return result;
                     }
                 }
-                catch (Exception ex) { cn.Close(); return 0; }
+
+            }
+            catch (Exception)
+            {
+                return 0;
             }
         }
 
         public static async Task<List<Kanton>> DBLoadKantoni()
         {
             List<Kanton> kantoni = new List<Kanton>();
-            string sql = "SELECT `kanton`,`lokacije` FROM `kantoni`";
-            using (MySqlConnection cn = new MySqlConnection(database.ToString()))
+            string query = "SELECT `kanton`,`lokacije` FROM `kantoni`";
+            try
             {
-                try
+                using (MySqlConnection connection = new MySqlConnection(database.ToString()))
                 {
-                    using (MySqlCommand cmd = new MySqlCommand(sql, cn))
+
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
-                        cn.Open();
-                        var reader = await cmd.ExecuteReaderAsync();
-                        while (reader.Read()) {
+                        await connection.OpenAsync();
+                        var reader = await command.ExecuteReaderAsync();
+                        while (await reader.ReadAsync())
+                        {
                             Kanton kanton = new Kanton();
                             kanton.kanton = reader.GetString(0);
                             kanton.lokacije = AktidoMySqlDataReader.GetLokacije(reader.GetString(1));
                             kantoni.Add(kanton);
                         }
-                        cn.Close();
                         return kantoni;
                     }
                 }
-                catch (Exception ex) { return kantoni; }
-            }
-        }
 
-        public static bool DBDoesExists(int id)
-        {
-            string sql = "SELECT COUNT(*) FROM nekretnine WHERE id = @id";
-            using (MySqlConnection cn = new MySqlConnection(database.ToString()))
+            }
+            catch (Exception)
             {
-                try
-                {
-                    using (MySqlCommand cmd = new MySqlCommand(sql, cn))
-                    {
-                        cmd.Parameters.AddWithValue("@id", id);
-                        cn.Open();
-                        var result = Convert.ToInt32(cmd.ExecuteScalar());
-                        cn.Close();
-                        if (result > 0) return true;     
-                        else return false;                       
-                    }
-                }
-                catch (Exception ex) { cn.Close(); return false; }
+                return kantoni;
             }
         }
 
         public static async Task<bool> DBIsOnline()
         {
-            using (MySqlConnection cn = new MySqlConnection(database.ToString()))
+            try
             {
-                try
+                using (MySqlConnection connection = new MySqlConnection(database.ToString()))
                 {
-                    cn.Open();
-                    cn.Close();
+                    await connection.OpenAsync();
                     return true;
                 }
-                catch (Exception ex) { return false; }
+            }
+            catch (Exception)
+            {
+                return false;
             }
         }
 

@@ -22,11 +22,9 @@ namespace Aktido
 {
     public partial class AktidoWindow : Window
     {
-        public static List<Kanton> kantoni = new List<Kanton>();     
-        BrojNeretnina broj_nekretnina = new BrojNeretnina();    
-        HashSet<int> cache;
         private int novih_artikala;
-        private bool stop;       
+        private bool stop;
+             
         public AktidoWindow()
         {
             InitializeComponent();
@@ -47,23 +45,23 @@ namespace Aktido
 
         private async void Search(int kategorija)
         {
-            for (Artikli artikli = new Artikli(kategorija); artikli.art_id.Count != 0; await artikli.getNext())
+            for (Articles artikli = new Articles(kategorija); artikli.art_id.Count != 0; await artikli.getNext())
             {
                 foreach (int id in artikli.art_id)
                 {
                     if (stop) return;
-                    if (!cache.Contains(id)) {               
+                    if (!AktidoCore.cache.Contains(id)) {               
                             string myJsonResponse = await AktidoCore.GetAsync("http://api.pik.ba/artikli/" + id);   
                             Nekretnina nekretnina = JsonConvert.DeserializeObject<Nekretnina>(myJsonResponse);
                             if(nekretnina != null)
                                 if(nekretnina.artikal != null) { 
-                                    nekretnina.artikal.kanton = (kantoni.Where(c => c.lokacije.Contains(nekretnina.artikal.grad)).Select(c => c.kanton)).FirstOrDefault();
+                                    nekretnina.artikal.kanton = (AktidoCore.kantoni.Where(c => c.lokacije.Contains(nekretnina.artikal.grad)).Select(c => c.kanton)).FirstOrDefault();
                                     Database.DBAddNekretnina(nekretnina);
                                     addNewArticle(nekretnina);
+                                    AktidoCore.cache.Add(id);
+                                    novih_artikala++;
+                                    txt_Novi.Content = "Novih artikala: " + novih_artikala;                           
                             }
-                            cache.Add(id);
-                            novih_artikala++;
-                            txt_Novi.Content = "Novih artikala: " + novih_artikala;
                     }
                     progressBar.Value += 1;
                     lbl_Done.Content = "Izvršeno: " + (int)Math.Ceiling(((double)progressBar.Value) / 30) + "/" + (int)Math.Ceiling(((double)progressBar.Maximum) / 30);
@@ -149,44 +147,41 @@ namespace Aktido
             btn_Search.IsEnabled = false;
             
             string selectedItem = comboBox.Text;
-            if (selectedItem.Equals("Stanovi")) { Search(Constants.stanovi); progressBar.Maximum = broj_nekretnina.stanovi; }
-            else if (selectedItem.Equals("Kuće")) { Search(Constants.kuce); progressBar.Maximum = broj_nekretnina.kuce; }
-            else if (selectedItem.Equals("Poslovni prostori")) { Search(Constants.poslovni_prostori); progressBar.Maximum = broj_nekretnina.prostori; }
-            else if (selectedItem.Equals("Zemljišta")) { Search(Constants.zemljista); progressBar.Maximum = broj_nekretnina.zemljista; }
-            else if (selectedItem.Equals("Garaže")) { Search(Constants.garaze); progressBar.Maximum = broj_nekretnina.garaze; }
-            else if (selectedItem.Equals("Vikendice")) { Search(Constants.vikendice); progressBar.Maximum = broj_nekretnina.vikendice; }
-            else if (selectedItem.Equals("Sve")) {
-                Search(Constants.stanovi);
-                Search(Constants.kuce);
-                Search(Constants.poslovni_prostori);
-                Search(Constants.zemljista);
-                Search(Constants.garaze);
-                Search(Constants.vikendice);              
-                progressBar.Maximum = broj_nekretnina.sve;
+            if(selectedItem.Equals("Sve")){
+                Search(AktidoCore.Estate.FirstOrDefault(u => u.name == "Stanovi").id);
+                Search(AktidoCore.Estate.FirstOrDefault(u => u.name == "Kuće").id);
+                Search(AktidoCore.Estate.FirstOrDefault(u => u.name == "Poslovni prostori").id);
+                Search(AktidoCore.Estate.FirstOrDefault(u => u.name == "Zemljišta").id);
+                Search(AktidoCore.Estate.FirstOrDefault(u => u.name == "Garaže").id);
+                Search(AktidoCore.Estate.FirstOrDefault(u => u.name == "Vikendice").id);
             }
+            else 
+                Search(AktidoCore.Estate.FirstOrDefault(u => u.name == selectedItem).id);
+
+            progressBar.Maximum = AktidoCore.Estate.FirstOrDefault(u => u.name == selectedItem).count;
         }
 
         private async void window_ContentRendered(object sender, EventArgs e)
         {
-            await BrojNekretnina();
+            await Start();
         }    
 
-        private async Task BrojNekretnina()
+        private async Task Start()
         {
             if (!await AktidoCore.checkOLXConnection()) { AktidoCore.ShowInfo("Nemam pristup sajtu! Provjerite internet konekciju."); return; }
             if (!await Database.DBIsOnline()) { AktidoCore.ShowInfo("Provjerite vezu sa bazom podataka!"); return; }
-            
-            kantoni = await Database.DBLoadKantoni();
-            cache = await Database.DBLoadCache();
-            await broj_nekretnina.getBrojNekretnina();                
 
-            lbl_BrojArtikala.Content = "Ukupno " + broj_nekretnina.sve.ToString() + " oglasa";
-            lbl_Stanovi.Content = "Stanovi: " + broj_nekretnina.stanovi;
-            lbl_Kuce.Content = "Kuće: " + broj_nekretnina.kuce;
-            lbl_Prostori.Content = "Poslovni prostori: " + broj_nekretnina.prostori;
-            lbl_Zemljista.Content = "Zemljišta: " + broj_nekretnina.zemljista;
-            lbl_Garaze.Content = "Garaže: " + broj_nekretnina.garaze;
-            lbl_Vikendice.Content = "Vikendice: " + broj_nekretnina.vikendice;
+            await AktidoCore.BuildCache();
+            await AktidoCore.LoadCantons();      
+            await AktidoCore.GetNumberOfEstates();
+
+            lbl_BrojArtikala.Content = "Ukupno " + AktidoCore.Estate[AktidoCore.Estate.FindIndex(c => c.name == "Sve")].count + " oglasa";
+            lbl_Stanovi.Content = "Stanovi: " + AktidoCore.Estate[AktidoCore.Estate.FindIndex(c => c.name == "Stanovi")].count;
+            lbl_Kuce.Content = "Kuće: " + AktidoCore.Estate[AktidoCore.Estate.FindIndex(c => c.name == "Kuće")].count;
+            lbl_Prostori.Content = "Poslovni prostori: " + AktidoCore.Estate[AktidoCore.Estate.FindIndex(c => c.name == "Poslovni prostori")].count;
+            lbl_Zemljista.Content = "Zemljišta: " + AktidoCore.Estate[AktidoCore.Estate.FindIndex(c => c.name == "Zemljišta")].count;
+            lbl_Garaze.Content = "Garaže: " + AktidoCore.Estate[AktidoCore.Estate.FindIndex(c => c.name == "Garaže")].count;
+            lbl_Vikendice.Content = "Vikendice: " + AktidoCore.Estate[AktidoCore.Estate.FindIndex(c => c.name == "Vikendice")].count;
             btn_Search.IsEnabled = true;
             btn_Pretrazi.IsEnabled = true;
         }

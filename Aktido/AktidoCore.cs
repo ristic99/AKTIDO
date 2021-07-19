@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -29,22 +30,17 @@ namespace Aktido
         }
     }
 
-    public class Kanton
-    {
-        public string kanton;
-        public List<string> lokacije;
-    }
-
-    public class Artikli
+    public class Articles
     {
         public List<int> art_id = new List<int>() { 1 };
         private int stranica { get; set; }
         private int kategorija { get; set; }
 
-        public Artikli(int arg)
+        public Articles(int arg)
         {
             kategorija = arg;
         }
+
         public async Task getNext()
         {        
             string response = await AktidoCore.GetAsync("https://www.olx.ba/pretraga?sort_order=desc&kategorija=" + kategorija + "&sort_po=datum&stranica=" + stranica);
@@ -59,38 +55,58 @@ namespace Aktido
         public string brojrezultata { get; set; }
     }
 
-    class BrojNeretnina
+    public class Kanton
     {
-        public int stanovi { get; set; }
-        public int kuce { get; set; }
-        public int zemljista { get; set; }
-        public int prostori { get; set; }
-        public int garaze { get; set; }
-        public int vikendice { get; set; }
-        public int sve { get; set; }
-
-        public async Task getBrojNekretnina()
-        {
-            stanovi = await getNumber(Constants.stanovi);
-            kuce = await getNumber(Constants.kuce);
-            zemljista = await getNumber(Constants.zemljista);
-            prostori = await getNumber(Constants.poslovni_prostori);
-            garaze = await getNumber(Constants.garaze);
-            vikendice = await getNumber(Constants.vikendice);
-            sve = stanovi + kuce + zemljista + prostori + garaze + vikendice;
-        }
-
-        private static async Task<int> getNumber(int num)
-        {
-            string response = await AktidoCore.GetAsync("https://www.olx.ba/pretraga?json=da&kategorija=" + num + "&vrsta=&od=&do=&kanton=&kvadrata_min=&kvadrata_max=&samobroj=da");
-            BrojRezultata deserialized = JsonConvert.DeserializeObject<BrojRezultata>(response);
-            return Int32.Parse(deserialized.brojrezultata.Replace(".",""));
-        }
+        public string kanton;
+        public List<string> lokacije;
     }
 
     class AktidoCore
     {
+        public static HashSet<int> cache;
+
+        public static List<Kanton> kantoni = new List<Kanton>();
+
+        public static List<Estate> Estate = new List<Estate>()
+        {
+            new Estate() { id = 23, name = "Stanovi", count = 0 },
+            new Estate() { id = 24, name = "Kuće", count = 0 },
+            new Estate() { id = 25, name = "Poslovni prostori", count = 0 },
+            new Estate() { id = 26, name = "Vikendice", count = 0 },
+            new Estate() { id = 29, name = "Zemljišta", count = 0 },
+            new Estate() { id = 30, name = "Garaže", count = 0 },
+            new Estate() { id = 2, name = "Sve", count = 0 }
+        };
+
+        public static List<Kind> Kind = new List<Kind>()
+        {
+            new Kind() { id = 0, name = "Prodaja" },
+            new Kind() { id = 1, name = "Izdavanje" },
+            new Kind() { id = 2, name = "Potražnja" },
+            new Kind() { id = -1, name = "Sve" }
+        };
+
         public static string config_path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Aktido\AktidoConfig";
+
+        public static async Task BuildCache()
+        {
+            cache = await Database.DBLoadCache();
+        }
+
+        public static async Task LoadCantons()
+        {
+            kantoni = await Database.DBLoadKantoni();
+        }
+
+        public static async Task GetNumberOfEstates()
+        {
+            foreach (Estate estate in AktidoCore.Estate)
+            {
+                string response = await GetAsync("https://www.olx.ba/pretraga?json=da&kategorija=" + AktidoCore.Estate.FirstOrDefault(u => u.name == estate.name).id + "&vrsta=&od=&do=&kanton=&kvadrata_min=&kvadrata_max=&samobroj=da");
+                BrojRezultata deserialized = JsonConvert.DeserializeObject<BrojRezultata>(response);
+                estate.count = Int32.Parse(deserialized.brojrezultata.Replace(".", ""));
+            }
+        }
 
         public static async Task<string> GetAsync(string uri)
         {
@@ -211,7 +227,7 @@ namespace Aktido
         public static void DialogSave(StringBuilder data)
         {
             Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
-            dlg.FileName = DateTime.Now.ToString("yyyy_MM_dd - HH_mm_ss");
+            dlg.FileName = DateTime.Now.ToString("MM dd yyyy - HH mm");
             dlg.DefaultExt = ".csv";
             dlg.Filter = "Text documents (.csv)|*.csv";
 
@@ -220,7 +236,7 @@ namespace Aktido
             if (result == true){
                 string filename = dlg.FileName;
                 AktidoCore.SaveData(data, filename);
-                ShowInfo("Exportovano! Ime tabele: " + DateTime.Now.ToString("yyyy_MM_dd - HH_mm_ss") + ".csv");
+                ShowInfo("Exportovano! Ime tabele: " + DateTime.Now.ToString("MM dd yyyy - HH mm") + ".csv");
             }
         }
 
@@ -235,7 +251,7 @@ namespace Aktido
 
         public static string CijenaToString(int cijena)
         {
-            if (cijena != 0) return cijena.ToString("C0");
+            if (cijena != 0) return cijena.ToString("C0", CultureInfo.CreateSpecificCulture("ba-BA"));
             else return "Po dogovoru";
         }
 
@@ -258,16 +274,16 @@ namespace Aktido
         }
 
         public static async Task<bool> checkOLXConnection()
-        {
-            Ping myPing = new Ping();
+        { 
             try
             {
+                Ping myPing = new Ping();
                 var pingReply = await myPing.SendPingAsync("olx.ba", 3000, new byte[32], new PingOptions(64, true));
                 if (pingReply.Status == IPStatus.Success)
                     return true;              
                 return false;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }

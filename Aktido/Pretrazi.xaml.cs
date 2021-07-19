@@ -34,7 +34,7 @@ namespace Aktido
 
         private void windowPretrazi_ContentRendered(object sender, EventArgs e)
         {
-            foreach (Kanton kanton in AktidoWindow.kantoni)
+            foreach (Kanton kanton in AktidoCore.kantoni)
             {
                 cBoxKanton.Items.Add(kanton.kanton);
             }
@@ -48,7 +48,7 @@ namespace Aktido
 
             cBoxLokacija.Items.Clear();
             cBoxLokacija.Visibility = Visibility.Visible;
-            List<string> lokacije = AktidoWindow.kantoni.Single(s => s.kanton.Equals(selection)).lokacije;
+            List<string> lokacije = AktidoCore.kantoni.Single(s => s.kanton.Equals(selection)).lokacije;
             cBoxLokacija.Items.Add("Mjesto");
             foreach (String lokacija in lokacije)
             {
@@ -81,10 +81,10 @@ namespace Aktido
             dataGrid.Items.Clear();
 
             SearchQuery search = new SearchQuery();
-            search.podkategorija = Constants.Podkategorija(comboBox_Podkategorija.Text);
-            search.vrsta_prodaje = Constants.Vrsta(comboBox_Vrsta.Text);
+            search.podkategorija = AktidoCore.Estate.FirstOrDefault(u => u.name == comboBox_Podkategorija.Text).id;
+            search.vrsta_prodaje = AktidoCore.Kind.FirstOrDefault(u => u.name == comboBox_Vrsta.Text).id;
 
-            if (search.podkategorija != -1)
+            if (search.podkategorija != 2)
                 search.query += " AND podkategorija = " + search.podkategorija;
             if (search.vrsta_prodaje != -1)
                 search.query += " AND vrsta_prodaje = " + search.vrsta_prodaje;
@@ -119,7 +119,7 @@ namespace Aktido
             foreach (Nekretnina nekretnina in nekretnine)
             {
                 nekretnina.artikal.url = "https://www.olx.ba/artikal/" + nekretnina.artikal.id;
-                nekretnina.artikal.podkategorija = Constants._Podkategorija(Int32.Parse(nekretnina.artikal.podkategorija));
+                nekretnina.artikal.podkategorija = AktidoCore.Estate.FirstOrDefault(c => c.id == Int32.Parse(nekretnina.artikal.podkategorija)).name; //Constants._Podkategorija(Int32.Parse(nekretnina.artikal.podkategorija));
                 if (nekretnina.artikal.cijena.Equals("0")) nekretnina.artikal.cijena = "Po dogovoru";
                 addNewArticle(nekretnina);
             }
