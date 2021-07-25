@@ -1,13 +1,12 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MySqlConnector;
+using Newtonsoft.Json;
 
-namespace Aktido
+namespace Aktido.Classes
 {
 
     public static class AktidoMySqlDataReader
@@ -37,24 +36,20 @@ namespace Aktido
 
     public class Database
     {
-        public static DatabaseJson database_json = LoadCred();
+        public static DatabaseJson DatabaseJson = LoadCred();
         public static MySqlConnectionStringBuilder database = new MySqlConnectionStringBuilder()
         {
-            Server = database_json.server_ip,
-            UserID = database_json.username,
-            Password = database_json.password,
-            Database = database_json.database,
+            Server = DatabaseJson.server_ip,
+            UserID = DatabaseJson.username,
+            Password = DatabaseJson.password,
+            Database = DatabaseJson.database,
             SslMode = MySqlSslMode.None
         };
 
         private static DatabaseJson LoadCred()
         {
-            if (System.IO.File.Exists(AktidoCore.config_path))
-            {
-                string lines = File.ReadAllText(AktidoCore.config_path, Encoding.UTF8);
-                return JsonConvert.DeserializeObject<DatabaseJson>(lines);
-            }
-            return new DatabaseJson();
+            if (!System.IO.File.Exists(Constants.config_path)) return new DatabaseJson();
+            return JsonConvert.DeserializeObject<DatabaseJson>(File.ReadAllText(Constants.config_path, Encoding.UTF8));
         }
 
         public static void DBAddNekretnina(Nekretnina nekretnina)

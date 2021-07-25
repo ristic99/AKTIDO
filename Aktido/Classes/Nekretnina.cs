@@ -1,13 +1,8 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
-namespace Aktido
+
+namespace Aktido.Classes
 {
 
     public class Putanja
@@ -28,16 +23,6 @@ namespace Aktido
         public string ime { get; set; }
     }
 
-    public class Artikal_TABLE
-    {
-        public string objavljeno { get; set; }
-        public string id { get; set; }
-        public string url { get; set; }
-        public string cijena { get; set; }
-        public string ime_korisnika { get; set; }
-        public string podkategorija { get; set; }
-    }
-    
     public class Artikal_MIN
     {
         public int id { get; set; }

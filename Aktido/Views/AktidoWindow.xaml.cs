@@ -1,24 +1,16 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Data;
-using System.IO;
 using System.Linq;
-using System.Net;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using Aktido.Classes;
+using Newtonsoft.Json;
 
-namespace Aktido
+namespace Aktido.Views
 {
     public partial class AktidoWindow : Window
     {
@@ -37,7 +29,7 @@ namespace Aktido
             dataGrid.Columns.Add(new DataGridTextColumn { Header = "URL", Binding = new Binding("url") });
         }
 
-        public void menuClick(object sender, RoutedEventArgs e)
+        public void MenuClick(object sender, RoutedEventArgs e)
         {
             OptionsWindow form = new OptionsWindow();
             form.Show();
@@ -53,14 +45,13 @@ namespace Aktido
                     if (!AktidoCore.cache.Contains(id)) {               
                             string myJsonResponse = await AktidoCore.GetAsync("http://api.pik.ba/artikli/" + id);   
                             Nekretnina nekretnina = JsonConvert.DeserializeObject<Nekretnina>(myJsonResponse);
-                            if(nekretnina != null)
-                                if(nekretnina.artikal != null) { 
-                                    nekretnina.artikal.kanton = (AktidoCore.kantoni.Where(c => c.lokacije.Contains(nekretnina.artikal.grad)).Select(c => c.kanton)).FirstOrDefault();
-                                    Database.DBAddNekretnina(nekretnina);
-                                    addNewArticle(nekretnina);
-                                    AktidoCore.cache.Add(id);
-                                    novih_artikala++;
-                                    txt_Novi.Content = "Novih artikala: " + novih_artikala;                           
+                            if(nekretnina?.artikal != null) { 
+                                nekretnina.artikal.kanton = (AktidoCore.kantoni.Where(c => c.lokacije.Contains(nekretnina.artikal.grad)).Select(c => c.kanton)).FirstOrDefault();
+                                Database.DBAddNekretnina(nekretnina);
+                                AddNewArticle(nekretnina);
+                                AktidoCore.cache.Add(id);
+                                novih_artikala++;
+                                txt_Novi.Content = "Novih artikala: " + novih_artikala;                           
                             }
                     }
                     progressBar.Value += 1;
@@ -114,17 +105,14 @@ namespace Aktido
             DataTable newTable = AktidoCore.CreateTable(selected);  
 
             foreach (Artikal_MIN row in dataGrid.SelectedItems)
-            {
-                DataRow datarow = newTable.NewRow();
                 newTable.Rows.Add(row.id,row.podkategorija, row.cijena, row.ime_korisnika,row.objavljeno,row.url);
-            }
 
             StringBuilder data = AktidoCore.ConvertDataTableToCsvFile(newTable);
             AktidoCore.DialogSave(data);
         }
             
 
-        private void addNewArticle(Nekretnina nekretnina)
+        private void AddNewArticle(Nekretnina nekretnina)
         {
             dataGrid.Items.Add(new Artikal_MIN
             {
@@ -168,7 +156,7 @@ namespace Aktido
 
         private async Task Start()
         {
-            if (!await AktidoCore.checkOLXConnection()) { AktidoCore.ShowInfo("Nemam pristup sajtu! Provjerite internet konekciju."); return; }
+            if (!await AktidoCore.CheckOlxConnection()) { AktidoCore.ShowInfo("Nemam pristup sajtu! Provjerite internet konekciju."); return; }
             if (!await Database.DBIsOnline()) { AktidoCore.ShowInfo("Provjerite vezu sa bazom podataka!"); return; }
 
             await AktidoCore.BuildCache();
@@ -189,11 +177,8 @@ namespace Aktido
         private void dataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             Artikal_MIN selected = (Artikal_MIN)dataGrid.SelectedItem;
-            if (selected != null)
-            {
-                ArtikalWindow form = new ArtikalWindow(selected.id);
-                form.Show();
-            }
+            if (selected == null) return;
+            new ArtikalWindow(selected.id).Show();
         }
     }
 }

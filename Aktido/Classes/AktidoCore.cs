@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
@@ -11,22 +10,16 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
+using Newtonsoft.Json;
 
-namespace Aktido
+namespace Aktido.Classes
 {
     public static class StringExtensionMethods
     {
         public static List<string> Between(this string source, string start, string end)
         {
-            var results = new List<string>();
             string pattern = string.Format("{0}({1}){2}", Regex.Escape(start), ".+?", Regex.Escape(end));
-
-            foreach (Match m in Regex.Matches(source, pattern))
-            {
-                results.Add(m.Groups[1].Value);
-            }
-
-            return results;
+            return (from Match m in Regex.Matches(source, pattern) select m.Groups[1].Value).ToList();
         }
     }
 
@@ -98,8 +91,6 @@ namespace Aktido
             new Kind() { id = 2, name = "Potražnja" },
             new Kind() { id = -1, name = "Sve" }
         };
-
-        public static string config_path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Aktido\AktidoConfig";
 
         public static async Task BuildCache()
         {
@@ -246,26 +237,22 @@ namespace Aktido
 
             Nullable<bool> result = dlg.ShowDialog();
 
-            if (result == true){
-                string filename = dlg.FileName;
-                AktidoCore.SaveData(data, filename);
-                ShowInfo("Exportovano! Ime tabele: " + DateTime.Now.ToString("MM dd yyyy - HH mm") + ".csv");
-            }
+            if (result != true) return;
+            string filename = dlg.FileName;
+            AktidoCore.SaveData(data, filename);
+            ShowInfo("Exportovano! Ime tabele: " + DateTime.Now.ToString("MM dd yyyy - HH mm") + ".csv");
         }
 
         public static int CijenaToInt(string cijena)
         {
             Regex regex = new Regex(@"\d+(.)?\d+\s+");
             Match match = regex.Match(cijena);
-            if (match.Success)
-                return Int32.Parse(match.Value.Replace(".", ""));
-            return 0;
+            return match.Success ? int.Parse(match.Value.Replace(".", "")) : 0;
         }
 
         public static string CijenaToString(int cijena)
         {
-            if (cijena != 0) return cijena.ToString("C0", CultureInfo.CreateSpecificCulture("ba-BA"));
-            else return "Po dogovoru";
+            return cijena != 0 ? cijena.ToString("C0", CultureInfo.CreateSpecificCulture("ba-BA")) : "Po dogovoru";
         }
 
         public static DataTable CreateTable(object o)
@@ -275,26 +262,22 @@ namespace Aktido
             {
                 try
                 {
-                    if (f.Name != "timestamp") //Ne treba mi timestamp!
-                    {
-                        f.GetValue(o, null);
-                        dt.Columns.Add(f.Name, f.PropertyType);
-                    }
+                    if (f.Name == "timestamp") return;
+                    f.GetValue(o, null);
+                    dt.Columns.Add(f.Name, f.PropertyType);
                 }
                 catch { }
             });
             return dt;
         }
 
-        public static async Task<bool> checkOLXConnection()
+        public static async Task<bool> CheckOlxConnection()
         { 
             try
             {
                 Ping myPing = new Ping();
                 var pingReply = await myPing.SendPingAsync("olx.ba", 3000, new byte[32], new PingOptions(64, true));
-                if (pingReply.Status == IPStatus.Success)
-                    return true;              
-                return false;
+                return pingReply.Status == IPStatus.Success;
             }
             catch (Exception)
             {

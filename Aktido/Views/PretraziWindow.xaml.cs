@@ -8,13 +8,11 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using Aktido.Classes;
 
-namespace Aktido
+
+namespace Aktido.Views
 {
     public partial class PretraziWindow : Window
     {    
@@ -50,7 +48,7 @@ namespace Aktido
             cBoxLokacija.Visibility = Visibility.Visible;
             List<string> lokacije = AktidoCore.kantoni.Single(s => s.kanton.Equals(selection)).lokacije;
             cBoxLokacija.Items.Add("Mjesto");
-            foreach (String lokacija in lokacije)
+            foreach (string lokacija in lokacije)
             {
                 cBoxLokacija.Items.Add(lokacija);
             }
@@ -80,9 +78,11 @@ namespace Aktido
 
             dataGrid.Items.Clear();
 
-            SearchQuery search = new SearchQuery();
-            search.podkategorija = AktidoCore.Estate.FirstOrDefault(u => u.name == comboBox_Podkategorija.Text).id;
-            search.vrsta_prodaje = AktidoCore.Kind.FirstOrDefault(u => u.name == comboBox_Vrsta.Text).id;
+            SearchQuery search = new SearchQuery
+            {
+                podkategorija = AktidoCore.Estate.FirstOrDefault(u => u.name == comboBox_Podkategorija.Text).id,
+                vrsta_prodaje = AktidoCore.Kind.FirstOrDefault(u => u.name == comboBox_Vrsta.Text).id
+            };
 
             if (search.podkategorija != 2)
                 search.query += " AND podkategorija = " + search.podkategorija;
@@ -108,26 +108,20 @@ namespace Aktido
 
         private async Task SearchDB(string query)
         {
-            List<Nekretnina> nekretnine = new List<Nekretnina>();
-
-            for (Search results = new Search(query); results._from <= results.broj_rezultata; results.Correction())
-            {
-                List<Nekretnina> result = await results.getResults(query);
-                nekretnine.AddRange(result);
-            }
-
+            List<Nekretnina> nekretnine = await new Search().GetData(query);
+            
             foreach (Nekretnina nekretnina in nekretnine)
             {
                 nekretnina.artikal.url = "https://www.olx.ba/artikal/" + nekretnina.artikal.id;
                 nekretnina.artikal.podkategorija = AktidoCore.Estate.FirstOrDefault(c => c.id == Int32.Parse(nekretnina.artikal.podkategorija)).name; //Constants._Podkategorija(Int32.Parse(nekretnina.artikal.podkategorija));
                 if (nekretnina.artikal.cijena.Equals("0")) nekretnina.artikal.cijena = "Po dogovoru";
-                addNewArticle(nekretnina);
+                AddNewArticle(nekretnina);
             }
 
             txt_Rez.Content = "Broj rezultata: " + nekretnine.Count();
         }
 
-        private void addNewArticle(Nekretnina nekretnina)
+        private void AddNewArticle(Nekretnina nekretnina)
         {
             dataGrid.Items.Add(new Artikal_MIN
             {
@@ -148,10 +142,7 @@ namespace Aktido
             DataTable newTable = AktidoCore.CreateTable(selected);
 
             foreach (Artikal_MIN row in dataGrid.SelectedItems)
-            {
-                DataRow datarow = newTable.NewRow();
                 newTable.Rows.Add(row.id, row.podkategorija, row.cijena, row.ime_korisnika, row.objavljeno, row.url);
-            }
 
             StringBuilder data = AktidoCore.ConvertDataTableToCsvFile(newTable);
             AktidoCore.DialogSave(data);
@@ -171,11 +162,8 @@ namespace Aktido
         private void dataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             Artikal_MIN selected = (Artikal_MIN)dataGrid.SelectedItem;
-            if (selected != null)
-            {
-                ArtikalWindow form = new ArtikalWindow(selected.id);
-                form.Show();
-            }
+            if (selected == null) return;
+            new ArtikalWindow(selected.id).Show();
         }
     }
 }

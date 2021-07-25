@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Aktido { 
+namespace Aktido.Classes { 
 
     class Constants
     {
         public const int query_limit = 10;
+
+        public static string config_path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Aktido\AktidoConfig";
     }
 }

@@ -1,20 +1,9 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using Aktido.Classes;
+using Newtonsoft.Json;
 
-namespace Aktido
+namespace Aktido.Views
 {
     public partial class OptionsWindow : Window
     {   
@@ -40,7 +29,7 @@ namespace Aktido
             Database.database.Database = txtDb.Text;
             Database.database.Password = txtPwd.Password;
             Database.database.Server = txtIP.Text;
-            AktidoCore.SaveData(new StringBuilder(JsonConvert.SerializeObject(Database.database)), AktidoCore.config_path);
+            AktidoCore.SaveData(new StringBuilder(JsonConvert.SerializeObject(Database.database)), Constants.config_path);
         }
     }
 }

@@ -1,19 +1,10 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using Aktido.Classes;
+using Newtonsoft.Json;
 
-namespace Aktido
+namespace Aktido.Views
 {
 	
     public partial class ArtikalWindow : Window
@@ -35,14 +26,7 @@ namespace Aktido
             osobine = nekretnina.artikal.osobine;
             
             foreach(Osobine osobina in osobine)
-            {
-                TextBlock txtNaziv = new TextBlock();
-                TextBlock txtVrijendost = new TextBlock();
-
-                txtNaziv.FontSize = 14;
-                txtNaziv.Text = osobina.naziv + ": " + osobina.vrijednost;
-                listBox_Osobine.Items.Add(txtNaziv);
-            }
+                listBox_Osobine.Items.Add(new TextBlock { FontSize = 14, Text = osobina.naziv + ": " + osobina.vrijednost });
 
             textBox.Text = nekretnina.artikal.detaljni_opis;
         }
