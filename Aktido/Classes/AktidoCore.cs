@@ -92,6 +92,16 @@ namespace Aktido.Classes
             new Kind() { id = -1, name = "Sve" }
         };
 
+        public static int GetEstateCount(string name)
+        {
+            return Estate.FirstOrDefault(estate => estate.name == name).count;
+        }
+
+        public static int GetEstateId(string name)
+        {
+            return Estate.FirstOrDefault(estate => estate.name == name).id;
+        }
+
         public static async Task BuildCache()
         {
             cache = await Database.DBLoadCache();
@@ -106,7 +116,7 @@ namespace Aktido.Classes
         {
             foreach (Estate estate in AktidoCore.Estate)
             {
-                string response = await GetAsync("https://www.olx.ba/pretraga?json=da&kategorija=" + AktidoCore.Estate.FirstOrDefault(u => u.name == estate.name).id + "&vrsta=&od=&do=&kanton=&kvadrata_min=&kvadrata_max=&samobroj=da");
+                string response = await GetAsync("https://www.olx.ba/pretraga?json=da&kategorija=" + GetEstateId(estate.name) + "&vrsta=&od=&do=&kanton=&kvadrata_min=&kvadrata_max=&samobroj=da");
                 BrojRezultata deserialized = JsonConvert.DeserializeObject<BrojRezultata>(response);
                 estate.count = Int32.Parse(deserialized.brojrezultata.Replace(".", ""));
             }
@@ -143,6 +153,11 @@ namespace Aktido.Classes
 
         public static void SaveData(StringBuilder data, string filePath)
         {
+            FileInfo file = new FileInfo(filePath);
+
+            if (!file.Directory.Exists)
+                Directory.CreateDirectory(file.DirectoryName);
+
             using (StreamWriter objWriter = new StreamWriter(filePath))
             {
                 objWriter.WriteLine(data);

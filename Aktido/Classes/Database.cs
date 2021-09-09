@@ -36,21 +36,15 @@ namespace Aktido.Classes
 
     public class Database
     {
-        public static DatabaseJson DatabaseJson = LoadCred();
+        public static DatabaseJson databaseJson = File.Exists(Constants.config_path) ? JsonConvert.DeserializeObject<DatabaseJson>(File.ReadAllText(Constants.config_path, Encoding.UTF8)) : new DatabaseJson();
         public static MySqlConnectionStringBuilder database = new MySqlConnectionStringBuilder()
         {
-            Server = DatabaseJson.server_ip,
-            UserID = DatabaseJson.username,
-            Password = DatabaseJson.password,
-            Database = DatabaseJson.database,
+            Server = databaseJson.server_ip,
+            UserID = databaseJson.username,
+            Password = databaseJson.password,
+            Database = databaseJson.database,
             SslMode = MySqlSslMode.None
         };
-
-        private static DatabaseJson LoadCred()
-        {
-            if (!System.IO.File.Exists(Constants.config_path)) return new DatabaseJson();
-            return JsonConvert.DeserializeObject<DatabaseJson>(File.ReadAllText(Constants.config_path, Encoding.UTF8));
-        }
 
         public static void DBAddNekretnina(Nekretnina nekretnina)
         {

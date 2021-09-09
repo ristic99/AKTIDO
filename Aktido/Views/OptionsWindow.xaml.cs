@@ -19,17 +19,14 @@ namespace Aktido.Views
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
-            SaveCred();
-            this.Close();
-        }
-
-        private void SaveCred()
-        {
             Database.database.UserID = txtUser.Text;
             Database.database.Database = txtDb.Text;
             Database.database.Password = txtPwd.Password;
             Database.database.Server = txtIP.Text;
+
             AktidoCore.SaveData(new StringBuilder(JsonConvert.SerializeObject(Database.database)), Constants.config_path);
+
+            this.Close();
         }
     }
 }
