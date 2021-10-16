@@ -79,8 +79,12 @@ namespace Aktido.Classes
             new Estate() { id = 24, name = "Kuće", count = 0 },
             new Estate() { id = 25, name = "Poslovni prostori", count = 0 },
             new Estate() { id = 26, name = "Vikendice", count = 0 },
+            new Estate() { id = 27, name = "Apartmani", count = 0 },
+            new Estate() { id = 28, name = "Sobe", count = 0 },
             new Estate() { id = 29, name = "Zemljišta", count = 0 },
             new Estate() { id = 30, name = "Garaže", count = 0 },
+            new Estate() { id = 270, name = "Ostalo", count = 0 },
+            new Estate() { id = 1193, name = "Montažni objekti", count = 0 },
             new Estate() { id = 2, name = "Sve", count = 0 }
         };
 

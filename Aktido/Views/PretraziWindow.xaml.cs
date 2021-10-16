@@ -113,9 +113,11 @@ namespace Aktido.Views
             foreach (Nekretnina nekretnina in nekretnine)
             {
                 nekretnina.artikal.url = "https://www.olx.ba/artikal/" + nekretnina.artikal.id;
-                nekretnina.artikal.podkategorija = AktidoCore.Estate.FirstOrDefault(c => c.id == Int32.Parse(nekretnina.artikal.podkategorija)).name; //Constants._Podkategorija(Int32.Parse(nekretnina.artikal.podkategorija));
-                if (nekretnina.artikal.cijena.Equals("0")) nekretnina.artikal.cijena = "Po dogovoru";
+                nekretnina.artikal.podkategorija = AktidoCore.Estate.FirstOrDefault(c => c.id == Int32.Parse(nekretnina.artikal.podkategorija)).name;
+                if (nekretnina.artikal.cijena.Equals("0"))
+                    nekretnina.artikal.cijena = "Po dogovoru";
                 AddNewArticle(nekretnina);
+                
             }
 
             txt_Rez.Content = "Broj rezultata: " + nekretnine.Count();
